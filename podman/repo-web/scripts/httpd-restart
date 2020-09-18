@@ -1,0 +1,5 @@
+#!/bin/bash
+echo -e 'Restarting httpd service'
+/usr/sbin/httpd -f /opt/httpd/conf/httpd.conf -k restart&
+echo -e "sleeping for 5 seconds to allow for process spinup"
+sleep 5

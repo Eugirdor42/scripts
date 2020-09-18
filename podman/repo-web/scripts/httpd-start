@@ -1,0 +1,4 @@
+#!/bin/bash
+echo -e "Starting HTTPD process with config file /opt/httpd/conf/httpd.conf in the foreground."
+/usr/sbin/httpd -f /opt/httpd/conf/httpd.conf -DFOREGROUND&
+sleep 5

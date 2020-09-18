@@ -1,0 +1,18 @@
+#!/bin/bash
+echo -e "Starting httpd-config $(date +%Y%m%d-%H:%M:%s)"
+
+echo -e "Reconfiguring system for web services" >> /var/log/install.log
+/bin/dnf -y install httpd mod_ssl php php-gd gd-devel php-xml openssl &>> /var/log/install.log
+
+mv /etc/httpd/conf /etc/httpd/old_conf &>> /var/log/install.log
+mv /etc/httpd/conf.d /etc/httpd/old_conf.d &>> /var/log/install.log
+
+if [ -f /opt/httpd/conf.modules.d ]
+  then 
+    ln -s /etc/httpd/conf.modules.d/ /opt/httpd/conf.modules.d &>> /var/log/install.log
+fi
+
+echo "configured" &>> /var/log/configured.log
+
+echo -e "Ending httpd-config $(date +%Y%m%d-%H:%M:%s)"
+

@@ -1,0 +1,25 @@
+#!/bin/bash
+echo -e "Starting httpd-launch $(date +%Y%m%d-%H:%M:%s)"
+
+if [ -f /opt/systemconfigured.txt ]
+then
+  echo "$(date +%Y%m%d-%H:%M:%s) - System previously configured" &>> /var/log/web-launch.log
+else
+  echo -e "$(date +%Y%m%d-%H:%M:%s) - Reconfiguring system for web services" >> /var/log/web-launch.log
+  /bin/dnf -y install httpd mod_ssl php php-gd gd-devel php-xml openssl &>> /var/log/web-launch.log
+
+  cp --recursive --verbose --no-clobber /etc/httpd/* /opt/httpd/ &>> /var/log/web-launch.log
+  cd /etc
+  mv httpd httpd_old
+  echo -e "$(date +%Y%m%d-%H:%M:%s) - Ending httpd config"
+  echo "$(date +%Y%m%d-%H:%M:%s) - configured - remove this file to have the configuration run again" &>> /opt/systemconfigured.txt
+ fi
+
+echo -e "$(date +%Y%m%d-%H:%M:%s) - Starting HTTPD process with config file /opt/httpd/conf/httpd.conf in the foreground." &>> /var/log/web-launch.log
+
+/usr/sbin/httpd -f /opt/httpd/conf/httpd.conf -DFOREGROUND  &>> /var/log/web-launch.log
+
+echo -e "$(date +%Y%m%d-%H:%M:%s) - Ending httpd-launch $(date +%Y%m%d-%H:%M:%s)"
+
+/bin/bash
+
